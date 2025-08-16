@@ -1,0 +1,88 @@
+i will provide you lists of titles:
+first is list of article titles. the article contains content to study.
+second is a list of all categories of articles. 
+your task is to provide the categories of each article in a similar format provided.
+
+list 1:
+pdf_names = [
+            "None",
+            "Always on the move: Tuna’s No-Nap Lifestyle",
+            "None",
+            "Nine Minutes of Extra rest or Nine minutes of regret?",
+            "None",
+            "An Empire of Convenience: The story of 7-Eleven",
+            "None",
+            "Have a Finger in Every Pie",
+            "The Secrets of Culinary Crowns",
+            "None",
+            "EU Approves Full Schengen Membership for Bulgaria and Romania",
+            "Coffee Prices at a record High Due to Supply Shortage",
+            "None",
+            "Life on the International Space Station",
+            "None",
+            "The Psychology of Stockholm Syndrome",
+            "None",
+            "Welcome Gen Beta: AI-Driven Generation Takes the Stage",
+            "None",
+            "Addressing a Canceled Reservation",
+            "Riding Trains and Sipping Tea: Alishan’s Twin Treasures",
+            "None",
+            "Shower Shoes: Protecting Feet for Six Decades",
+            "None",
+            "2024's Words of the year: give new meaning to old terms",
+            "None",
+            "Gobekli Tepe: Rewriting history's first chapter",
+            "None"
+            ]
+
+List 2:
+all categories:
+"Activities & Hobbies"
+"Airport & Directions"
+"Animals & Pets"
+"Beauty & Fashion"
+"Book"
+"Clothes"
+"Communication & life skills"
+"Culture & Festival"
+"Duplicated files"
+"Environment"
+"Food & drinks"
+"Fortune Teller & Fong sui"
+"Grammar"
+"Health"
+"Hobbies & Games"
+"How to"
+"Injury & issue"
+"Jobs & Business"
+"Language"
+"Listening"
+"Movies"
+"Music & Art"
+"Nature"
+"New Articles"
+"News & shows & celebrities"
+"Places"
+"Reading"
+"Relationship"
+"Safety"
+"Self awareness & mental health"
+"Shopping & Money"
+"Social Media"
+"Society & Trend"
+"Sports"
+"Story"
+"Study & History"
+"Technology"
+"Test"
+"Time & Procastination"
+"TOEIC"
+"Transportation&Infrustructure"
+"Travel"
+"Voc test"
+"Weather & Season"
+"Wishes"s
+"Writing"
+]
+
+provide list 3:
