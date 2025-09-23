@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Splitter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+
+    <!-- <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script> -->
+    <style>
+        canvas { display: block; margin: 20px auto; border: 1px solid black; }
+        .form-container { text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h2 align="center">Click a page to start a sub-PDF</h2>
+    <div id="pdf-container"></div>
+    <div class="form-container" id="form-container"></div>
+    <div style="text-align:center;">
+        <button onclick="submitData()">Submit</button>
+    </div>
+    <script src="js/viewer.js"></script>
+</body>
+</html>
