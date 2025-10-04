@@ -51,10 +51,44 @@ pdfjsLib.getDocument(fullUrl).promise
     });
 
 function submitData() {
+    // deactivate button
+    const send_button = document.getElementById("send_data_button")
+    send_button.disabled = true;
+
+
+    // fetch('/submit-titles', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ tuples, file })
+    // }).then(res => res.json())
+    //   .then(data => alert(data.message));
+
+
+    // const form = document.createElement('form');
+    // form.method = 'POST';
+    // form.action = '/submit-titles';
+
+    // const data = { tuples, file };
+    // const input = document.createElement('input');
+    // input.type = 'hidden';
+    // input.name = 'json';
+    // input.value = JSON.stringify(data);
+    // form.appendChild(input);
+
+    // document.body.appendChild(form);
+    // form.submit();
     fetch('/submit-titles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tuples, file })
-    }).then(res => res.json())
-      .then(data => alert(data.message));
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.redirect) {
+            window.location.href = data.redirect; // Navigate manually
+        } else {
+            alert(data.message);
+        }
+    });
 }
+

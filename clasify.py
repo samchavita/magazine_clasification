@@ -50,6 +50,7 @@ def extract_text_from_pdf(pdf_path):
 def create_dir(name):
     """Create directory for sub-pdfs creation"""
     if not os.path.exists(f'./extracted/{name}'):
+        print(f"Creating directory ./extracted/{name}...")
         os.makedirs(f'./extracted/{name}')
     else:
         # remove all files from directory
@@ -121,28 +122,27 @@ def generate_pdf_extractions( file, tuples ):
     for filename in sorted(os.listdir(f'./extracted/{file}')):
         if filename.endswith(".pdf"):
             pdf_path = os.path.join(f'./extracted/{file}', filename)
-            dict_of_pdf_texts.append( json.dumps( { "title": filename, "text" : extract_text_from_pdf(pdf_path) }, indent=4 ) )
+            dict_of_pdf_texts.append({ "title": filename, "text" : extract_text_from_pdf(pdf_path).replace("\n", " ").replace("\t", " ").replace("  ", " ") })
             # break
 
     # dict_of_pdf_texts = f'{{ "articles": {dict_of_pdf_texts} }}'
 
-    with open(f'./extracted/{file}/extraction_log.txt', "w", encoding="utf-8") as text_file:
+    with open(f'./extracted/{file}/prompt.json', "w", encoding="utf-8") as text_file:
         prompt = f"""You are a helpful English assistant that helps to classify articles into categories and levels based on their content.
         please use the following rules or criteria for classifying articles. 
         Please return 2 arrays. 1. An array of categories names and 2. An array of levels.
-        1. The categories should be determined by the article title matching to the following list: {categories}
+        1. The categories should be determined by the article title matching to the following list: {categories.__str__()}
         2. The levels of the articles should be determined by the article content. Consider the levels being 1, 1.5, 2, 3, 4. Consider the levels being for kids in Taiwan of grade 5, Junior high school 2, junior high school 3, Senior high school grade 1, senior high school grade 2 respectively. for example if the article contains simple vocabulary and sentence structure, let the level be 1. If the vocabulary and sentence structure are complex let it be level 4.
 
-        Below is the data obtained from OCR extraction of articles containing their respective articles titles and the content of the articles:
-
-        {dict_of_pdf_texts.__str__()}
-        """
+        Below is the data obtained from OCR extraction of articles containing their respective articles titles and the content of the articles:\n"""
         # print(prompt)
         text_file.write(prompt)
+        json.dump(dict_of_pdf_texts, text_file, indent=4, ensure_ascii=False)
 
-    print(f"Extraction completed and saved to ./extracted/{file}/extraction_log.txt.")
 
-    print("Please copy prompt from extraction_log.txt and paste it into chatGPT.com. Then return to paste the output.")
+    print(f"Extraction completed and saved to ./extracted/{file}/prompt.txt.")
+
+    print("Please copy prompt from prompt.txt and paste it into chatGPT.com. Then return to paste the output.")
 
 
 

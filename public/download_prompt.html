@@ -1,0 +1,28 @@
+
+<html>
+<head>
+  <title>Download Prompt</title>
+</head>
+<body>
+  <h2>Download Your File</h2>
+  <button id="prompt_download_btn" onclick="downloadPrompt()">Download Prompt</button>
+  <h3>download the file then copy and paste the below prompt into <a href="chat.com">chatgpt.com</a></h3>
+
+  <p>
+    <i>Follow the instructions in the downloaded file. Please note the output must be in python syntax. 
+    that is, your output should be like below, strictly 2 arrays categories & levels: <br>categories = [ c_0, c_1, ..., c_k ] <br>levels = [ l_0, l_1, ..., l_k ]</i>
+  </p>
+  <script>
+    function downloadPrompt() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const filePath = urlParams.get('prompt_file_path');
+      console.log(`Downloading file: ${filePath}`);
+
+      // Trigger browser to download the file
+      window.location.href = `/download?file_path=${encodeURIComponent(filePath)}`;
+  }
+  </script>
+</body>
+
+
+</html>
