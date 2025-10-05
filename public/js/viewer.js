@@ -34,11 +34,12 @@ pdfjsLib.getDocument(fullUrl).promise
                 page.render({ canvasContext: context, viewport });
 
                 canvas.addEventListener('click', () => {
-                    const title = prompt(`Enter title for sub-PDF starting at page ${pageNum}`);
+                    const title = prompt(`Enter title @ pg. ${pageNum}:`);
+                    const level = prompt(`Enter level:`, "1");
                     if (title) {
-                        tuples.push({ page: pageNum, title });
+                        tuples.push({ page: pageNum, title, level });
                         const p = document.createElement('p');
-                        p.innerText = `Selected Page ${pageNum}: ${title}`;
+                        p.innerText = `Page ${pageNum}: ${title} (lv: ${level})`;
                         formContainer.appendChild(p);
                     }
                 });
@@ -91,4 +92,45 @@ function submitData() {
         }
     });
 }
+
+
+// // function to enter categories
+// function enterCategories() {
+//     // while (ture) {
+//         const categories = prompt("Enter categories as a python list, e.g., ['cat1', 'cat2', ...]:");
+//         if (categories) {
+//             try {
+//                 // Evaluate the input to convert it into an array
+//                 const categoriesArray = eval(categories);
+//                 if (Array.isArray(categoriesArray)) {
+//                     const p = document.createElement('p');
+//                     p.innerText = `Categories: ${JSON.stringify(categoriesArray)}`;
+
+//                     // send to server
+//                     fetch('/submit-categories', {
+//                         method: 'POST',
+//                         headers: { 'Content-Type': 'application/json' },
+//                         body: JSON.stringify({ categories: categoriesArray, file })
+//                     })
+//                     .then(res => res.json())
+//                     .then(data => {
+//                         if (data.redirect) {
+//                             window.location.href = data.redirect; // Navigate manually
+//                         } else {
+//                             alert(data.message);
+//                         }
+//                     });
+
+//                     formContainer.appendChild(p);
+
+//                     // break; // Exit the loop if input is valid
+//                 } else {
+//                     alert("Please enter a valid Python list.");
+//                 }
+//             } catch (e) {
+//                 alert("Error parsing categories. Please ensure it's a valid Python list.");
+//             }
+//         }
+//     // }
+// }
 

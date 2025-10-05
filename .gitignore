@@ -4,6 +4,7 @@
 ./sources/
 
 *.pdf
+*.zip
 
 ./node_modules_temp/
 ./node_modules/

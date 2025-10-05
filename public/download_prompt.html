@@ -6,12 +6,15 @@
 <body>
   <h2>Download Your File</h2>
   <button id="prompt_download_btn" onclick="downloadPrompt()">Download Prompt</button>
-  <h3>download the file then copy and paste the below prompt into <a href="chat.com">chatgpt.com</a></h3>
+  <h3>download the file then copy and paste the below prompt into <a href="https://chatgpt.com/">chatgpt.com</a></h3>
 
   <p>
     <i>Follow the instructions in the downloaded file. Please note the output must be in python syntax. 
-    that is, your output should be like below, strictly 2 arrays categories & levels: <br>categories = [ c_0, c_1, ..., c_k ] <br>levels = [ l_0, l_1, ..., l_k ]</i>
+    that is, your output should be like below, strictly 1 list for categories: <br>categories = [ c_0, c_1, ..., c_k ]</i>
   </p>
+
+  <button onclick="enterCategories()">Enter Categories</button>
+
   <script>
     function downloadPrompt() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -20,7 +23,58 @@
 
       // Trigger browser to download the file
       window.location.href = `/download?file_path=${encodeURIComponent(filePath)}`;
+    }
+
+
+  // function to enter categories
+  function enterCategories() {
+      // while (true) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const filePath = urlParams.get('prompt_file_path');
+
+          const categories = prompt("Enter categories as a python list, e.g., ['cat1', 'cat2', ...]:");
+          if (categories) {
+              try {
+                  // Evaluate the input to convert it into an array
+                  const categoriesArray = eval(categories);
+
+                  if (Array.isArray(categoriesArray)) {
+                      const p = document.createElement('p');
+                      p.innerText = `Categories: ${JSON.stringify(categoriesArray)}`;
+
+                      // send to server
+                      fetch('/submit-categories', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ categories: categoriesArray, file: filePath })
+                      })
+
+                      
+                      .then(res => res.json())
+                      .then(data => {
+                          if (data.redirect) {
+                              console.log("Redirecting to:", data.redirect);
+                              window.location.href = data.redirect; // Navigate manually
+                          } else {
+                              alert(data.message);
+                              alert(JSON.stringify(data))
+                          }
+                      });
+
+                    //   formContainer.appendChild(p);
+                      
+                      // break; // Exit the loop if input is valid
+                  } else {
+                      alert("Please enter a valid Python list.");
+                  }
+              } catch (e) {
+                  alert( e + "Error parsing categories. Please ensure it's a valid Python list.");
+              }
+          }
+      // }
   }
+
+
   </script>
 </body>
 

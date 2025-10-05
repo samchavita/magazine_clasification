@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const AdmZip = require('adm-zip');
 const path = require('path');
 const { spawn } = require('child_process');
 const app = express();
@@ -49,7 +50,7 @@ app.post('/submit-titles', (req, res) => {
         console.log(`Python script finished with code ${code}`);
         // res.json({ message: 'Data sent to Python script.' });
 
-        const prompt_file_path = "extracted/" + file.split('/').pop() + "/prompt.txt";
+        const prompt_file_path = "extracted/" + file.split('/').pop() + "/prompt.json";
 
         // redirect to download prompt page and send the name of the file
         // res.redirect(`/download_prompt?prompt_file_path=${prompt_file_path}`);
@@ -93,5 +94,69 @@ app.get('/download', (req, res) => {
     }
   });
 });
+
+app.post('/submit-categories', (req, res) => {
+    const categories = req.body.categories; // Expecting a list of categories
+    const file = req.body.file.replaceAll('prompt.json', ''); // Name of the original PDF file
+
+    console.log(`Received categories: ${categories}`);
+    console.log(`Received file: ${file}`);
+
+    const python = spawn('python3', ['set_categories.py']);
+
+    // send the categories and the name of the file to the python script
+    python.stdin.write(JSON.stringify({ categories, file }));
+    python.stdin.end();
+
+    python.stdout.on('data', (data) => {
+        console.log(`Python Output: ${data}`);
+    });
+
+    python.on('close', (code) => {
+        console.log(`Python script finished with code ${code}`);
+        res.json({ message: 'Categories and levels sent to Python script.' , redirect: `/download_pdfs?file=${file}` });
+    });
+});
+
+app.get('/download_pdfs', (req, res) => {
+  const dir_path = req.query.file;
+
+  console.log(`downloading all pdfs from: ${dir_path}`);
+
+  if (!dir_path) {
+    return res.status(400).send('Missing dir_path parameter');
+  }
+
+  const directoryPath = path.join(__dirname, dir_path);
+  const fs = require('fs');
+
+  // zip all pdfs in the directory and send to the user
+  const zip = new AdmZip();
+  fs.readdir(directoryPath, (err, files) => {
+    if (err) {
+      console.error('Error reading directory:', err);
+      return res.status(500).send('Error reading directory');
+    }
+
+    files.forEach((file) => {
+      if (path.extname(file) === '.pdf') {
+        zip.addLocalFile(path.join(directoryPath, file));
+      }
+    });
+
+    const zipFilePath = path.join(__dirname, 'public', 'downloads', 'pdfs.zip');
+    zip.writeZip(zipFilePath);
+
+    res.download(zipFilePath, (err) => {
+      if (err) {
+        console.error('Error downloading zip file:', err);
+        res.status(500).send('Error downloading zip file');
+      }
+    });
+  });
+});
+
+// Start server
+
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

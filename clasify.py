@@ -89,10 +89,10 @@ def generate_pdf_extractions( file, tuples ):
     reader = PdfReader("./uploads/" + file )
     file_size = len(reader.pages)
 
-    for i in range(len(tuples) - 1):
+    for i in range(len(tuples)):
         if tuples[i]['title'].replace(" ", "").lower() != "none":
-            new_pdf_name = f"{order.pop()}_category*" + "-" + tuples[i]['title'] + "-" + file + ' Level'
-            new_pdf_name = new_pdf_name.title().replace("  ", " ").replace(" ", "_").replace(":", "").replace("’", "").replace("'", "").replace("&", "and")
+            new_pdf_name = f"{order.pop()}_category*" + "-" + tuples[i]['title'] + "-" + file.lower().replace(".pdf", "") + '-Level-' + tuples[i]['level']
+            new_pdf_name = new_pdf_name.title().replace("  ", " ").replace(" ", "_").replace(":", "").replace("__", "_").replace("&", "and")
             extracted_pdf = f"./extracted/{file}/{new_pdf_name}.pdf"
             start_page = tuples[i]['page']
             end_page = tuples[i + 1]['page']-1 if i + 1 < len(tuples) else file_size
