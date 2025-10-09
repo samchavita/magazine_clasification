@@ -48,7 +48,7 @@ pdfjsLib.getDocument(fullUrl).promise
     })
     .catch(err => {    
         console.error("Error loading PDF:", err);
-        alert("Failed to load PDF: " + err.message);
+        alert("Failed to load PDF\nRemove special characters from file name before uploading\n" + err.message);
     });
 
 function submitData() {

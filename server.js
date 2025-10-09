@@ -3,6 +3,7 @@ const multer = require('multer');
 const AdmZip = require('adm-zip');
 const path = require('path');
 const { spawn } = require('child_process');
+const fs = require('fs');
 const app = express();
 const PORT = 3000;
 
@@ -128,7 +129,6 @@ app.get('/download_pdfs', (req, res) => {
   }
 
   const directoryPath = path.join(__dirname, dir_path);
-  const fs = require('fs');
 
   // zip all pdfs in the directory and send to the user
   const zip = new AdmZip();

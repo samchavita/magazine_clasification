@@ -1,6 +1,7 @@
 
 
 import os
+import re
 from PyPDF2 import PdfReader, PdfWriter
 from pdf_page_numbers import list_of_pdfs # Importing the list from another file
 from pdf_names import pdf_names # Importing the list from another file
@@ -122,19 +123,24 @@ def generate_pdf_extractions( file, tuples ):
     for filename in sorted(os.listdir(f'./extracted/{file}')):
         if filename.endswith(".pdf"):
             pdf_path = os.path.join(f'./extracted/{file}', filename)
-            dict_of_pdf_texts.append({ "title": filename, "text" : extract_text_from_pdf(pdf_path).replace("\n", " ").replace("\t", " ").replace("  ", " ") })
+            dict_of_pdf_texts.append({ "title": filename, "text" : re.sub(r'[^a-zA-Z0-9 .,?!:;\'"-]', '',extract_text_from_pdf(pdf_path).replace("\n", " ").replace("\t", " ").replace("  ", " ")[:1000]) })
             # break
 
     # dict_of_pdf_texts = f'{{ "articles": {dict_of_pdf_texts} }}'
 
     with open(f'./extracted/{file}/prompt.json', "w", encoding="utf-8") as text_file:
-        prompt = f"""You are a helpful English assistant that helps to classify articles into categories and levels based on their content.
-        please use the following rules or criteria for classifying articles. 
-        Please return 2 arrays. 1. An array of categories names and 2. An array of levels.
-        1. The categories should be determined by the article title matching to the following list: {categories.__str__()}
-        2. The levels of the articles should be determined by the article content. Consider the levels being 1, 1.5, 2, 3, 4. Consider the levels being for kids in Taiwan of grade 5, Junior high school 2, junior high school 3, Senior high school grade 1, senior high school grade 2 respectively. for example if the article contains simple vocabulary and sentence structure, let the level be 1. If the vocabulary and sentence structure are complex let it be level 4.
+        prompt = f"""You are a helpful English assistant that helps to classify articles for ESL students into categories based on their title and more importantly on the content (vocab and sentence structure).
+        Please use the following rules or criteria for classifying articles. 
+        Please return an array of categories names.
+        1. The categories should be determined by the article title AND the content of the article matching to the following list: {categories.__str__()}
+        2. You must strictly follow the categories provided in the list above. Do not create your own categories nor use other titles that are not in the data provided.
+        3. If the article title is not clear, then you must rely on the content of the article to determine the category.
+        4. You must implement the chain of thought reasoning. This means you must reason in steps before concluding the final category. Note that the reasoning should not be outputed, only the final category should be outputted.
+        5. After concluding the reasoning, you must provide the final category name only. No comments or explanations in python syntax: [ c_0, c_1, ..., c_k ]
 
-        Below is the data obtained from OCR extraction of articles containing their respective articles titles and the content of the articles:\n"""
+        Below is the data obtained from OCR extraction of {len(dict_of_pdf_texts)} articles containing their respective articles titles and the content of the articles:\n
+        
+        JSON data:\n"""
         # print(prompt)
         text_file.write(prompt)
         json.dump(dict_of_pdf_texts, text_file, indent=4, ensure_ascii=False)
