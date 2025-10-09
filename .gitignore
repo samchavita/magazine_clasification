@@ -8,3 +8,6 @@
 
 ./node_modules_temp/
 ./node_modules/
+./.vscode/
+.DS_Store
+./__pycache__/
